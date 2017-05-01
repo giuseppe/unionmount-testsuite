@@ -42,8 +42,10 @@ def mount_union(ctx):
             system("rm -rf " + upper_mntroot + "/*")
             os.mkdir(upperdir)
             os.mkdir(workdir)
-        system("mount -t overlay overlay " + union_mntroot +
-               " -olowerdir=" + lower_mntroot + ",upperdir=" + upperdir + ",workdir=" + workdir)
+
+        mntopt = " -overify_lower"
+        system("mount -t overlay overlay " + union_mntroot + mntopt +
+               ",lowerdir=" + lower_mntroot + ",upperdir=" + upperdir + ",workdir=" + workdir)
         ctx.note_upper_fs(upper_mntroot, testdir)
         ctx.note_lower_layers(lower_mntroot)
         ctx.note_upper_layer(upperdir)

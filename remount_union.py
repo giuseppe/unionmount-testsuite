@@ -20,8 +20,10 @@ def remount_union(ctx, rotate_upper=False):
         else:
             upperdir = ctx.upper_layer()
         workdir = upper_mntroot + "/work"
+
+        mntopt = " -overify_lower"
         mnt = union_mntroot
-        cmd = "mount -t overlay overlay " + mnt + " -onoatime,lowerdir=" + lowerlayers + ",upperdir=" + upperdir + ",workdir=" + workdir
+        cmd = "mount -t overlay overlay " + mnt + mntopt + ",lowerdir=" + lowerlayers + ",upperdir=" + upperdir + ",workdir=" + workdir
         system(cmd)
         write_file("/dev/kmsg", cmd);
         ctx.note_lower_layers(lowerlayers)
