@@ -101,6 +101,11 @@ def set_up(ctx):
         create_file(lowerdir + "/foo" + si, ":xxx:yyy:zzz")
         rec = ctx.record_file("foo" + si, "r")
 
+        # Then we create a bunch of hardlinks to those files
+        to = lowerdir + "/foo" + si
+        os.link(to, lowerdir + "/bar" + si)
+        rec = ctx.record_file("bar" + si, "r")
+
         # Then we create a bunch of direct symlinks to those files
         to = "../a/foo" + si
         os.symlink(to, lowerdir + "/direct_sym" + si)
@@ -147,7 +152,7 @@ def set_up(ctx):
         ctx.record_file("empty" + si, "d")
 
         # Everything above is then owned by the bin user
-        for f in [ "foo", "direct_sym", "indirect_sym", "pointless" ]:
+        for f in [ "foo", "bar", "direct_sym", "indirect_sym", "pointless" ]:
             os.lchown(lowerdir + "/" + f + si, 1, 1)
 
         # Create some root-owned regular files also
