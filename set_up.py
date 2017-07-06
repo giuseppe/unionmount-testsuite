@@ -211,3 +211,10 @@ def set_up(ctx):
         system("mount --make-private " + cfg.backup_mntroot())
 
         os.mkdir(cfg.snapshot_mntroot())
+
+        # --sn --samefs means start with nosnapshot setup until first recycle
+        # so don't make a backup of fs post setup
+        if cfg.is_verify():
+            os.mkdir(cfg.backup_mntroot() + "/full")
+            if not cfg.is_samefs():
+                ctx.make_backup()
