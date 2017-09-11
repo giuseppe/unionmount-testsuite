@@ -4,7 +4,7 @@ def mount_union(ctx):
     cfg = ctx.config()
     union_mntroot = cfg.union_mntroot()
     testdir = cfg.testdir()
-    if cfg.testing_none():
+    if cfg.testing_none() and not cfg.testing_snapshot():
         lower_mntroot = cfg.lower_mntroot()
         system("mount -o remount,rw " + lower_mntroot)
         system("mount -o bind " + lower_mntroot + " " + union_mntroot)
@@ -13,6 +13,7 @@ def mount_union(ctx):
     else:
         lower_mntroot = cfg.lower_mntroot()
         upper_mntroot = cfg.upper_mntroot()
+        snapshot_mntroot = cfg.snapshot_mntroot()
         if cfg.is_samefs():
             base_mntroot = cfg.base_mntroot()
             system("mount -o remount,rw " + base_mntroot)
@@ -38,9 +39,22 @@ def mount_union(ctx):
         os.mkdir(upperdir)
         os.mkdir(workdir)
 
+        if cfg.testing_snapshot():
+            system("mount -o remount,rw " + lower_mntroot)
+            mnt = snapshot_mntroot
+        else:
+            mnt = union_mntroot
         mntopt = " -orw" + cfg.mntopts()
-        system("mount -t overlay overlay " + union_mntroot + mntopt +
+        system("mount -t overlay overlay " + mnt + mntopt +
                ",lowerdir=" + lower_mntroot + ",upperdir=" + upperdir + ",workdir=" + workdir)
-        ctx.note_upper_fs(upper_mntroot, testdir)
+        if cfg.testing_snapshot():
+            snapmntopt = " -oupperdir=" + lower_mntroot
+            # --sn --samefs means start with nosnapshot setup until first recycle
+            if not cfg.is_samefs():
+                snapmntopt += ",snapshot=" + snapshot_mntroot
+            system("mount -t snapshot snapshot " + union_mntroot + snapmntopt)
+            ctx.note_upper_fs(lower_mntroot, testdir)
+        else:
+            ctx.note_upper_fs(upper_mntroot, testdir)
         ctx.note_lower_layers(lower_mntroot)
         ctx.note_upper_layer(upperdir)

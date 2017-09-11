@@ -16,6 +16,7 @@ def show_format(why):
     print("Format:")
     print("\t", sys.argv[0], "<--no|--ov[=<maxlayers>]> [--samefs|--maxfs=<maxfs>|--squashfs] [--xdev] [--verify] [--ts=<0|1>] [-v] [<test-name>+]")
     print("\t", sys.argv[0], "<--no|--ov> [--samefs|--squashfs] [-s|--set-up]")
+    print("\t", sys.argv[0], "--sn[=0] [-s|--set-up|--verify]")
     print("\t", sys.argv[0], "--open-file <file> [-acdertvw] [-W <data>] [-R <data>] [-B] [-E <err>]")
     print("\t", sys.argv[0], "--<fsop> <file> [<args>*] [-aLlv] [-R <content>] [-B] [-E <err>]")
     sys.exit(2)
@@ -100,8 +101,13 @@ elif args[0].startswith("--ov="):
     maxlayers = int(n)
     if maxlayers < 0:
         show_format("Invalid value for maxlayers >= 0")
+elif args[0] == "--sn":
+    cfg.set_testing_snapshot()
+elif args[0] == "--sn=0":
+    cfg.set_testing_snapshot()
+    recycle_list = [ "0", "" ]
 else:
-    show_format("Invalid test type selector (--ov or --no)")
+    show_format("Invalid test type selector (--ov, --sn or --no)")
 
 index = None
 xino_auto = None
