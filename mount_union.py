@@ -52,6 +52,7 @@ def mount_union(ctx):
             except OSError:
                 pass
 
+            mntopt = mntopt + ",verify=on,redirect_dir=verify"
             system("mount -o remount,rw " + lower_mntroot)
             # This is the latest snapshot of lower_mntroot:
             system("mount -t overlay overlay " + curr_snapshot + mntopt +

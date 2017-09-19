@@ -49,6 +49,7 @@ def remount_union(ctx, rotate_upper=False, cycle_mount=False):
                     system("cp -a " + lower_mntroot + "/a " + cfg.backup_mntroot() + "/full/" + ctx.curr_layer() + "/")
 
             if rotate_upper or cycle_mount:
+                mntopt = mntopt + ",verify=on,redirect_dir=verify"
                 # This is the latest snapshot of lower_mntroot:
                 cmd = "mount -t overlay overlay " + curr_snapshot + mntopt + ",lowerdir=" + lower_mntroot + ",upperdir=" + upperdir + ",workdir=" + workdir
                 system(cmd)
