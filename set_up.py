@@ -181,16 +181,10 @@ def set_up(ctx):
     if cfg.is_squashfs():
         system("mksquashfs " + lowerdir + " " + lowerimg + " -keep-as-directory > /dev/null");
         system("mount -o loop,ro " + lowerimg + " " + lower_mntroot)
-    else:
-        # The mount has to be read-only for us to make use of it
-        system("mount -o remount,ro " + lower_mntroot)
     ctx.note_lower_fs(lowerdir)
 
     if cfg.testing_snapshot():
         system("mount -t tmpfs backup " + cfg.backup_mntroot())
-
-        # Systemd has weird ideas about things
-        system("mount --make-private " + cfg.backup_mntroot())
 
         os.mkdir(cfg.snapshot_mntroot())
 

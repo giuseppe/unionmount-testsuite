@@ -70,11 +70,12 @@ class config:
         self.__testing_overlayfs = True
 
     def set_testing_snapshot(self):
-        self.__base_mntroot = "/base"
-        self.__lower_mntroot = "/lower"
-        self.__upper_mntroot = "/upper"
-        self.__union_mntroot = "/mnt"
-        self.__backup_mntroot = "/backup"
+        self.__test_root = "/var/vol"
+        self.__base_mntroot = self.__test_root + "/base"
+        self.__lower_mntroot = self.__test_root + "/lower"
+        self.__upper_mntroot = self.__test_root + "/upper"
+        self.__union_mntroot = self.__test_root + "/mnt"
+        self.__backup_mntroot = self.__test_root + "/backup"
         self.__snapshot_mntroot = self.__backup_mntroot + "/snapshot"
         self.__testing_snapshot = True
         self.__testing_none = True
