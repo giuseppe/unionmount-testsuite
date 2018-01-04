@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 import sys, os, types, inspect
 from settings import config
@@ -267,7 +267,7 @@ for test in tests:
         # Construct the union
         set_up(ctx)
         mount_union(ctx)
-        os.sync()
+        system("sync");
 
         # Run a test script
         script = __import__("tests." + test, globals(), locals(), ['subtests'])
@@ -280,7 +280,7 @@ for test in tests:
                 if type(subtest) != types.FunctionType:
                     continue
                 subtests.append((inspect.getfile(subtest),
-                                 inspect.getsourcelines(subtest)[1],
+                                 1,
                                  subtest.__doc__,
                                  subtest))
 
