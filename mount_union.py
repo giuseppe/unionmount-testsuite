@@ -48,6 +48,9 @@ def mount_union(ctx):
                 pass
 
             mntopt = mntopt + ",index=on,nfs_export=on,redirect_dir=origin"
+            if not cfg.is_verify():
+                # don't copy files snapshot when not verifying snapshot content
+                mntopt = mntopt + ",noatime"
             system("mount -o remount,rw " + lower_mntroot)
             # This is the latest snapshot of lower_mntroot:
             system("mount -t overlay overlay " + curr_snapshot + mntopt +
